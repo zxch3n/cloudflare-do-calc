@@ -65,10 +65,10 @@ function calculateComputeDurationForHibernationPerMonth() {
     return durationSeconds;
 }
 
+const AVG_READ_PER_MESSAGE = 2;
+const AVG_WRITE_PER_MESSAGE = 2;
+const AVG_DELETE_PER_MESSAGE = 0.1;
 function calcStoragePrice() {
-    const AVG_READ_PER_MESSAGE = 2;
-    const AVG_WRITE_PER_MESSAGE = 2;
-    const AVG_DELETE_PER_MESSAGE = 0.1;
     const readNum = DAU *
         AVG_READ_PER_MESSAGE * DAILY_DURATION_IN_HOURS *
         MESSAGE_COUNT_PER_HOUR_PER_USER * 30;
@@ -83,6 +83,18 @@ function calcStoragePrice() {
     const deletePrice = Math.max(deleteNum - 1e6, 0) * 1 / 1e6;
     return readPrice + writePrice + deletePrice;
 }
+
+console.log(`Configuration:
+  DAU: ${DAU}
+  WEBSOCKET_CONNECT_TIME_PER_HOUR_PER_USER: ${WEBSOCKET_CONNECT_TIME_PER_HOUR_PER_USER}
+  MESSAGE_COUNT_PER_HOUR_PER_USER: ${MESSAGE_COUNT_PER_HOUR_PER_USER}
+  DAILY_DURATION_IN_HOURS: ${DAILY_DURATION_IN_HOURS}
+  AVG_MESSAGE_PROCESS_TIME_IN_S: ${AVG_MESSAGE_PROCESS_TIME_IN_S}
+  --- For Storage ---
+  AVG_READ_PER_MESSAGE: ${AVG_READ_PER_MESSAGE}
+  AVG_WRITE_PER_MESSAGE: ${AVG_WRITE_PER_MESSAGE} 
+  AVG_DELETE_PER_MESSAGE: ${AVG_DELETE_PER_MESSAGE}
+`);
 
 calculateHibernationWithStorageCost();
 console.log("");
